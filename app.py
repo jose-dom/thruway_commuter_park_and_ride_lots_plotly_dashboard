@@ -1,4 +1,4 @@
-# Import required libraries
+# importting libraries
 import pickle
 import copy
 import pathlib
@@ -17,8 +17,9 @@ import dash_table
 import psycopg2
 from psycopg2 import Error
 import os
+# update script to check whether data is new
 import update_tble
-# connecting database and getting lot data
+# connecting to database and getting lots data
 try:
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     print("PostgreSQL connection is opened")
@@ -37,7 +38,7 @@ DATA_PATH = PATH.joinpath("data").resolve()
 # loading data into dataframe without using database
 #lots = pd.read_csv("data/Thruway_Commuter_Park_and_Ride_Lots.csv")
 #------------------------------------------------------------------
-# creating dash server
+# creating dash app
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
 )
@@ -166,6 +167,7 @@ app.layout = html.Div(
     style={"display": "flex", "flex-direction": "column"},
 )
 
+# displaying available spaces range
 @app.callback(
     Output("output-container-range-slider", "children"),
     [
@@ -176,7 +178,7 @@ def update_output(spaces_range):
     output_range = "Between " + str(spaces_range[0]) + " and " + str(spaces_range[1]) + " Available Spaces"
     return output_range
 
-
+# by by lot size plot
 @app.callback(
     Output("count-graph", "children"),
     [
@@ -213,6 +215,7 @@ def make_count_figure(run_by, paved_status, lighted_status, spaces_range):
         )
     return operators
 
+# generate individual location plots
 @app.callback(
     Output("drill-down", "children"),
     [
@@ -231,37 +234,36 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
         iteration+=1
         df = lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])]
         fig = go.Figure(
-            data=[
-                    go.Bar(
-                        x=df["lot_name"], 
-                        y=df["available_spaces"],
-                    )
-                ]
-            )
+                data=[
+                        go.Bar(
+                            x=df["lot_name"], 
+                            y=df["available_spaces"],
+                        )
+                    ]
+                )
         fig.update_layout(
-            title_text=i+"\nLocations",
-            xaxis_title="Lot Name",
-            yaxis_title="Number of Available Spaces in Lot"
-        )
+                title_text=i+"\nLocations",
+                xaxis_title="Lot Name",
+                yaxis_title="Number of Available Spaces in Lot"
+            )
         spaces_graph = html.Div(
-            [
-                dcc.Graph(
-                    id={
-                        "type": "operator-graph",
-                        "index": iteration
-                        }, 
-                    figure=fig, 
-                    ),
-            ],
-            id=i+" graph container",
-            className="three columns pretty_container",
-            style={'display': 'inline-block', "margin-right": "15px"},
-        )
-
+                [
+                    dcc.Graph(
+                        id={
+                            "type": "operator-graph",
+                            "index": iteration
+                            }, 
+                        figure=fig, 
+                        ),
+                ],
+                id=i+" graph container",
+                className="three columns pretty_container",
+                style={'display': 'inline-block', "margin-right": "15px"},
+            )
         graphs.append(spaces_graph)
     return graphs
 
-
+# update map plot
 @app.callback(
     Output("map", "children"),
     [
@@ -292,6 +294,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     )
     return map_plot
 
+# update table
 @app.callback(
     Output("table", "children"),
     [
