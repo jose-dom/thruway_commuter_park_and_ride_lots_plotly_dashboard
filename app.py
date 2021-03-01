@@ -34,8 +34,9 @@ finally:
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("data").resolve()
 #------------------------------------------------------------------
-# loading data into dataframe
+# loading data into dataframe without using database
 #lots = pd.read_csv("data/Thruway_Commuter_Park_and_Ride_Lots.csv")
+#------------------------------------------------------------------
 # creating dash server
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
@@ -46,12 +47,12 @@ run_by_options = [
     {"label": str(owner), "value": str(owner)}
     for owner in lots["operator"].unique()
 ]
-# setting filtering by operators option
+# setting filtering by is_paved option
 paved_status_options = [
     {"label": str(option), "value": str(option)}
     for option in lots["is_paved"].unique()
 ]
-# setting filtering by operators option
+# setting filtering by light option
 lighted_status_options = [
     {"label": str(option), "value": str(option)}
     for option in lots["light"].unique()
