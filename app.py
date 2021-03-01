@@ -87,6 +87,15 @@ app.layout = html.Div(
                 # controller
                 html.Div(
                     [
+                        html.P("Filter by Number of Available Spaces:", className="control_label"),
+                        html.P(id='output-container-range-slider', className="control_label"),
+                        dcc.RangeSlider(
+                            id="avail_spaces_slider",
+                            min=0,
+                            max=lots["available_spaces"].max(),
+                            value=[0, lots["available_spaces"].max()],
+                            className="dcc_control",
+                        ),
                         html.P("Filter by Operator:", className="control_label"),
                         dcc.Dropdown(
                             id="run_by",
@@ -141,7 +150,7 @@ app.layout = html.Div(
             ],
             className="row flex-display",
         ),
-        # paved and lighted per location
+        # table container
         html.Div(
             [
                 html.Div(
@@ -157,6 +166,16 @@ app.layout = html.Div(
     style={"display": "flex", "flex-direction": "column"},
 )
 
+@app.callback(
+    Output("output-container-range-slider", "children"),
+    [
+        Input("avail_spaces_slider", "value"),
+    ]
+)
+def update_output(spaces_range):
+    output_range = "Between " + str(spaces_range[0]) + " and " + str(spaces_range[1]) + " Available Spaces"
+    return output_range
+
 
 @app.callback(
     Output("count-graph", "children"),
@@ -164,12 +183,14 @@ app.layout = html.Div(
         Input("run_by", "value"),
         Input("paved_status", "value"),
         Input("lighted_status", "value"),
+        Input("avail_spaces_slider", "value"),
     ]
 )
-def make_count_figure(run_by, paved_status, lighted_status):
+def make_count_figure(run_by, paved_status, lighted_status, spaces_range):
+    print(spaces_range)
     y_values = []
     for i in run_by:
-        y_values.append(lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))]["lot_name"].value_counts().sum() )
+        y_values.append(lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])]["lot_name"].value_counts().sum() )
     fig = go.Figure(
             data=[
                     go.Bar(
@@ -197,17 +218,18 @@ def make_count_figure(run_by, paved_status, lighted_status):
     [
         Input("run_by", "value"),
         Input("paved_status", "value"),
-        Input("lighted_status","value")
+        Input("lighted_status","value"),
+        Input("avail_spaces_slider", "value"),
     ]
 )
-def make_aggregate_figure(run_by, paved_status, lighted_status):
+def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
     graphs = [
         html.H3("Locations Per Operator",style={"margin-bottom": "10px", "margin-left": "45%", "margin-top": "10px"})
         ]
     iteration=0
     for i in run_by:
         iteration+=1
-        df = lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))]
+        df = lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])]
         fig = go.Figure(
             data=[
                     go.Bar(
@@ -245,11 +267,12 @@ def make_aggregate_figure(run_by, paved_status, lighted_status):
     [
         Input("run_by", "value"),
         Input("paved_status", "value"),
-        Input("lighted_status","value")
+        Input("lighted_status","value"),
+        Input("avail_spaces_slider", "value"),
     ]
 )
-def get_map(run_by, paved_status, lighted_status):
-    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))]
+def get_map(run_by, paved_status, lighted_status, spaces_range):
+    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])]
     fig = px.scatter_geo(
             df,
             lat=df.latitutide,
@@ -274,11 +297,12 @@ def get_map(run_by, paved_status, lighted_status):
     [
         Input("run_by", "value"),
         Input("paved_status", "value"),
-        Input("lighted_status","value")
+        Input("lighted_status","value"),
+        Input("avail_spaces_slider", "value"),
     ]
 )
-def get_table(run_by, paved_status, lighted_status):
-    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))].drop(columns=["lot_location","latitutide","longtitude"])
+def get_table(run_by, paved_status, lighted_status, spaces_range):
+    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])].drop(columns=["lot_location","latitutide","longtitude"])
     tble = html.Div(
         [
             dash_table.DataTable(
@@ -287,9 +311,9 @@ def get_table(run_by, paved_status, lighted_status):
                 data=df.to_dict('records'),
             )
         ],
-        id="table",
-        className="twelve columns container",
-        style={'display': 'inline-block', "margin-right": "15px", "overflow": "scroll"},
+        id="table container",
+        className="pretty_container",
+        style={"overflow": "scroll"},
     )
     return tble
 # main
