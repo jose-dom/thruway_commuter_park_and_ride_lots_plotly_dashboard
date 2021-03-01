@@ -14,7 +14,6 @@ import plotly.graph_objs as go
 import plotly.express as px
 import geopandas as gpd
 import dash_table
-import django
 import psycopg2
 from psycopg2 import Error
 import os
