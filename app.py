@@ -92,7 +92,7 @@ app.layout = html.Div(
                         dcc.RangeSlider(
                             id="avail_spaces_slider",
                             min=0,
-                            max=lots["available_spaces"].max(),
+                            max=lots["available_spaces"].max()+1,
                             value=[0, lots["available_spaces"].max()],
                             className="dcc_control",
                         ),
