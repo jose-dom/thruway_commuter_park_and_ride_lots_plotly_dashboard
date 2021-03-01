@@ -1,0 +1,20 @@
+"""layout_count["title"] = "Number of Lots by Operators"
+    layout_count["xaxis_title"] = "Name of Operator"
+    layout_count["yaxis_title"] = "Name of Lots"
+    layout_count["title"] = "Number of Lots by Operators"
+    layout_count["dragmode"] = "select"
+    layout_count["showlegend"] = False
+    layout_count["autosize"] = True
+
+    figure = dict(data=data, layout=layout_count)
+    return figure"""
+     """
+    data = [
+        dict(
+            type="bar",
+            x=run_by,
+            y=y_values,
+            name="total_count",
+        ),
+    ]"""
+        #layout_count = copy.deepcopy(layout)
