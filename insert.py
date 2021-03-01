@@ -13,21 +13,24 @@ source_file = "data/lots.csv"
 downloaded_file = "downloaded_lots.csv"
 # comparing original data with new data
 if filecmp.cmp(source_file, downloaded_file):
-    pass
+    conn = psycopg2.connect(os.environ.get("DATABASE_URL"), sslmode='require')
+    print(conn)
 # if data is updated
 else:
-    # connection to database
+    """# connection to database
     connection = psycopg2.connect(
         host=os.environ.get("HOST"),
         database=os.environ.get("DATABASE"),
         user=os.environ.get("USER"),
         password=os.environ.get("PASSWORD")
     )
-    cursor = connection. cursor()
+    cursor = conn.cursor()
     # update records
     sql_file = open("insert.sql")
     sql_as_string = sql_file.read()
     cursor.executescript(sql_as_string)
     for row in cursor.execute("SELECT * FROM lots"):
-        print(row)
+        print(row)"""
+    
+    pass
     

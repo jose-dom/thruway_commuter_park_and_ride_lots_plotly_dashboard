@@ -14,12 +14,28 @@ import plotly.graph_objs as go
 import plotly.express as px
 import geopandas as gpd
 import dash_table
+import django
+import psycopg2
+from psycopg2 import Error
+import os
+# connecting database and getting lot data
+try:
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    print("PostgreSQL connection is opened")
+    query = "SELECT * FROM lots"
+    lots = pd.read_sql_query(query, connection)
+except (Exception, Error) as error:
+        print("Error while connecting to PostgreSQL", error)
+finally:
+    if (connection):
+        connection.close()
+        print("PostgreSQL connection is closed")
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("data").resolve()
 #------------------------------------------------------------------
 # loading data into dataframe
-lots = pd.read_csv("data/Thruway_Commuter_Park_and_Ride_Lots.csv")
+#lots = pd.read_csv("data/Thruway_Commuter_Park_and_Ride_Lots.csv")
 # creating dash server
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
@@ -28,17 +44,17 @@ server = app.server
 # setting filtering by operators option
 run_by_options = [
     {"label": str(owner), "value": str(owner)}
-    for owner in lots["Run By"].unique()
+    for owner in lots["operator"].unique()
 ]
 # setting filtering by operators option
 paved_status_options = [
     {"label": str(option), "value": str(option)}
-    for option in lots["Paved"].unique()
+    for option in lots["is_paved"].unique()
 ]
 # setting filtering by operators option
 lighted_status_options = [
     {"label": str(option), "value": str(option)}
-    for option in lots["Lighted"].unique()
+    for option in lots["light"].unique()
 ]
 # app layout
 app.layout = html.Div(
@@ -75,7 +91,7 @@ app.layout = html.Div(
                             id="run_by",
                             options=run_by_options,
                             multi=True,
-                            value=lots["Run By"].unique(),
+                            value=lots["operator"].unique(),
                             className="dcc_control",
                         ),
                         html.P("Filter by Paved Status:", className="control_label"),
@@ -83,7 +99,7 @@ app.layout = html.Div(
                             id="paved_status",
                             options=paved_status_options,
                             multi=True,
-                            value=lots["Paved"].unique(),
+                            value=lots["is_paved"].unique(),
                             className="dcc_control",
                         ),
                         html.P("Filter by Lighted Status:", className="control_label"),
@@ -91,7 +107,7 @@ app.layout = html.Div(
                             id="lighted_status",
                             options=lighted_status_options,
                             multi=True,
-                            value=lots["Lighted"].unique(),
+                            value=lots["light"].unique(),
                             className="dcc_control",
                         ),
                     ],
@@ -152,7 +168,7 @@ app.layout = html.Div(
 def make_count_figure(run_by, paved_status, lighted_status):
     y_values = []
     for i in run_by:
-        y_values.append(lots[(lots["Run By"] == i) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))]["Title"].value_counts().sum() )
+        y_values.append(lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))]["lot_name"].value_counts().sum() )
     fig = go.Figure(
             data=[
                     go.Bar(
@@ -190,19 +206,19 @@ def make_aggregate_figure(run_by, paved_status, lighted_status):
     iteration=0
     for i in run_by:
         iteration+=1
-        df = lots[(lots["Run By"] == i) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))]
+        df = lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))]
         fig = go.Figure(
             data=[
                     go.Bar(
-                        x=df["Title"], 
-                        y=df["Spaces"],
+                        x=df["lot_name"], 
+                        y=df["available_spaces"],
                     )
                 ]
             )
         fig.update_layout(
             title_text=i+"\nLocations",
-            xaxis_title="Lot Title",
-            yaxis_title="Number of Spaces in Lot"
+            xaxis_title="Lot Name",
+            yaxis_title="Number of Available Spaces in Lot"
         )
         spaces_graph = html.Div(
             [
@@ -232,16 +248,16 @@ def make_aggregate_figure(run_by, paved_status, lighted_status):
     ]
 )
 def get_map(run_by, paved_status, lighted_status):
-    df = lots[(lots["Run By"].isin(run_by)) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))]
+    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))]
     fig = px.scatter_geo(
             df,
-            lat=df.Latitude,
-            lon=df.Longitude,
+            lat=df.latitutide,
+            lon=df.longtitude,
             scope="usa",
             title="Map",
-            center={"lat": df.Latitude.mean(), "lon": df.Longitude.mean()},
-            hover_name="Title",
-            hover_data=lots.columns.drop("Title","Location")
+            center={"lat": df.latitutide.mean(), "lon": df.longtitude.mean()},
+            hover_name="lot_name",
+            hover_data=lots.columns.drop("lot_name","lot_location")
         )
     map_plot = html.Div(
             [
@@ -261,7 +277,7 @@ def get_map(run_by, paved_status, lighted_status):
     ]
 )
 def get_table(run_by, paved_status, lighted_status):
-    df = lots[(lots["Run By"].isin(run_by)) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))].drop(columns=["Location","Latitude","Longitude"])
+    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status))].drop(columns=["lot_location","latitutide","longtitude"])
     tble = html.Div(
         [
             dash_table.DataTable(
@@ -277,4 +293,4 @@ def get_table(run_by, paved_status, lighted_status):
     return tble
 # main
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=True, host="localhost", port=8000)
