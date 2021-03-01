@@ -190,7 +190,7 @@ def make_count_figure(run_by, paved_status, lighted_status, spaces_range):
     print(spaces_range)
     y_values = []
     for i in run_by:
-        y_values.append(lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])]["lot_name"].value_counts().sum() )
+        y_values.append(lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])]["lot_name"].value_counts().sum() )
     fig = go.Figure(
             data=[
                     go.Bar(
@@ -229,7 +229,7 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
     iteration=0
     for i in run_by:
         iteration+=1
-        df = lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])]
+        df = lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])]
         fig = go.Figure(
             data=[
                     go.Bar(
@@ -272,7 +272,7 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
     ]
 )
 def get_map(run_by, paved_status, lighted_status, spaces_range):
-    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])]
+    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])]
     fig = px.scatter_geo(
             df,
             lat=df.latitutide,
@@ -302,7 +302,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     ]
 )
 def get_table(run_by, paved_status, lighted_status, spaces_range):
-    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] > spaces_range[0]) & (lots["available_spaces"] < spaces_range[1])].drop(columns=["lot_location","latitutide","longtitude"])
+    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])].drop(columns=["lot_location","latitutide","longtitude"])
     tble = html.Div(
         [
             dash_table.DataTable(
