@@ -17,6 +17,7 @@ import dash_table
 import psycopg2
 from psycopg2 import Error
 import os
+import update_tble
 # connecting database and getting lot data
 try:
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))

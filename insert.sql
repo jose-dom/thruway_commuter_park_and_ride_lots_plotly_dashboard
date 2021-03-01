@@ -12,4 +12,4 @@ CREATE TABLE lots (
         lot_location varchar
     );
 
-\COPY lots FROM 'downloaded_lots.csv' DELIMITER ',' CSV HEADER;
+\COPY lots FROM 'data/Thruway_Commuter_Park_and_Ride_Lots.csv' DELIMITER ',' CSV HEADER;
