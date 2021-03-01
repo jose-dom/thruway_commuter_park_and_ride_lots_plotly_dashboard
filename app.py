@@ -145,7 +145,7 @@ app.layout = html.Div(
                 html.Div(
                     children=[],
                     id="table",
-                    className="twelve columns"
+                    className="twelve columns pretty_container"
                 ),
             ],
             className="row flex-display",
@@ -286,7 +286,7 @@ def get_table(run_by, paved_status, lighted_status):
             )
         ],
         id="table",
-        className="twelve columns pretty_container",
+        className="twelve columns",
         style={'display': 'inline-block', "margin-right": "15px", "overflow": "scroll"},
     )
     return tble
