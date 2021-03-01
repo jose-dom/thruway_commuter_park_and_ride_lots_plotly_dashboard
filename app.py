@@ -67,20 +67,47 @@ app.layout = html.Div(
                     [
                         html.Div(
                             [
-                                html.H3(
+                                html.H2(
                                     "New York Thruway Commuter Park and Ride Lots",
-                                    style={"margin-bottom": "5px"},
+                                    style={"margin-bottom": "10px"},
                                 ),
                             ]
+                        ),
+                    ],
+                    className="twelve columns",
+                    id="title",
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            html.P(
+                                "The Commuter Park Lots Listing provides travelers along the Thruway System with a listing of available locations in which to park their vehicle and commute from." + "\n" +
+                                "The Thruway Authority does offer several commuter Park and Ride lots across the system. Parking at these commuter lots is posted for a maximum stay of 16 hours, and are not designated for multiple stays. Lengthy stays defeat the purpose of Commuter Park and ride lots. Traffic personnel and State Police Police strictly enforce these parking regulations. There are no overnight or long-term parking facilities on the System. "
+                            )
                         )
                     ],
-                    className="twelve columns text-center",
-                    id="title",
+                    className="six columns offset-by-three",
+                    id="basic_info",
+                    style={"margin-top": "10px"}
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.A(
+                                        html.Button("Learn More", id="learn-more-button"),
+                                        href="https://data.ny.gov/Transportation/Thruway-Commuter-Park-and-Ride-Lots/nvxe-b625",
+                                        )
+                            ],
+                        ),
+                    ],
+                    className="one column offset-by-five",
+                    id="button_row",
+                    style={"margin-bottom": "10px"}
                 )
             ],
             id="header",
-            className="row flex-display",
-            style={"margin-bottom": "25px"},
+            className="row inline-block-display",
         ),
         # controls and first row of plots
         html.Div(
@@ -147,6 +174,7 @@ app.layout = html.Div(
                     children=[],
                     id="drill-down",
                     className="twelve columns",
+                    style={"margin":"auto"}
                 ),
             ],
             className="row flex-display",
@@ -157,7 +185,7 @@ app.layout = html.Div(
                 html.Div(
                     children=[],
                     id="table",
-                    className="twelve columns"
+                    className="twelve columns",
                 ),
             ],
             className="row flex-display",
@@ -227,7 +255,18 @@ def make_count_figure(run_by, paved_status, lighted_status, spaces_range):
 )
 def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
     graphs = [
-        html.H3("Locations Per Operator",style={"margin-bottom": "10px", "margin-left": "45%", "margin-top": "10px"})
+            html.Div(
+                [
+                    html.Div(
+                        [
+                            html.H3("Locations Per Operator",style={"margin-bottom": "15px", "margin-top": "10px"})
+                        ],
+                        className="three columns offset-by-four"
+                    )
+                ], 
+                className="row"
+            ),
+            html.Br()
         ]
     iteration=0
     for i in run_by:
@@ -242,9 +281,12 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
                     ]
                 )
         fig.update_layout(
-                title_text=i+"\nLocations",
+                title_text=i,
                 xaxis_title="Lot Name",
-                yaxis_title="Number of Available Spaces in Lot"
+                yaxis_title="Number of Available Spaces in Lot",
+                font=dict(
+                    size=12,
+                )
             )
         spaces_graph = html.Div(
                 [
@@ -258,7 +300,7 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
                 ],
                 id=i+" graph container",
                 className="three columns pretty_container",
-                style={'display': 'inline-block', "margin-right": "15px"},
+                style={'display': 'inline-block', "margin-right": "10px"},
             )
         graphs.append(spaces_graph)
     return graphs
