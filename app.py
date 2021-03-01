@@ -213,4 +213,4 @@ def get_map(run_by):
 
 # main
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=True, host="localhost", port=8000)
