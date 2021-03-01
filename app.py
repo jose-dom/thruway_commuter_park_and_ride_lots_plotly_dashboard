@@ -277,4 +277,4 @@ def get_table(run_by, paved_status, lighted_status):
     return tble
 # main
 if __name__ == "__main__":
-    app.run_server(debug=True, host="localhost", port=8000)
+    app.run_server(debug=True)
