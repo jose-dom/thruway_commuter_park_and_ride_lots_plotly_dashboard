@@ -13,6 +13,7 @@ import dash_html_components as html
 import plotly.graph_objs as go
 import plotly.express as px
 import geopandas as gpd
+import dash_table
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("data").resolve()
@@ -28,6 +29,16 @@ server = app.server
 run_by_options = [
     {"label": str(owner), "value": str(owner)}
     for owner in lots["Run By"].unique()
+]
+# setting filtering by operators option
+paved_status_options = [
+    {"label": str(option), "value": str(option)}
+    for option in lots["Paved"].unique()
+]
+# setting filtering by operators option
+lighted_status_options = [
+    {"label": str(option), "value": str(option)}
+    for option in lots["Lighted"].unique()
 ]
 # app layout
 app.layout = html.Div(
@@ -67,6 +78,22 @@ app.layout = html.Div(
                             value=lots["Run By"].unique(),
                             className="dcc_control",
                         ),
+                        html.P("Filter by Paved Status:", className="control_label"),
+                        dcc.Dropdown(
+                            id="paved_status",
+                            options=paved_status_options,
+                            multi=True,
+                            value=lots["Paved"].unique(),
+                            className="dcc_control",
+                        ),
+                        html.P("Filter by Lighted Status:", className="control_label"),
+                        dcc.Dropdown(
+                            id="lighted_status",
+                            options=lighted_status_options,
+                            multi=True,
+                            value=lots["Lighted"].unique(),
+                            className="dcc_control",
+                        ),
                     ],
                     className="pretty_container three columns",
                     id="cross-filter-options",
@@ -92,7 +119,7 @@ app.layout = html.Div(
                 html.Div(
                     children=[],
                     id="drill-down",
-                    className="twelve columns"
+                    className="twelve columns",
                 ),
             ],
             className="row flex-display",
@@ -102,7 +129,7 @@ app.layout = html.Div(
             [
                 html.Div(
                     children=[],
-                    id="paved-lighted",
+                    id="table",
                     className="twelve columns"
                 ),
             ],
@@ -118,12 +145,14 @@ app.layout = html.Div(
     Output("count-graph", "children"),
     [
         Input("run_by", "value"),
+        Input("paved_status", "value"),
+        Input("lighted_status", "value"),
     ]
 )
-def make_count_figure(run_by):
+def make_count_figure(run_by, paved_status, lighted_status):
     y_values = []
     for i in run_by:
-        y_values.append(lots[lots["Run By"] == i]["Title"].value_counts().sum() )
+        y_values.append(lots[(lots["Run By"] == i) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))]["Title"].value_counts().sum() )
     fig = go.Figure(
             data=[
                     go.Bar(
@@ -150,14 +179,18 @@ def make_count_figure(run_by):
     Output("drill-down", "children"),
     [
         Input("run_by", "value"),
+        Input("paved_status", "value"),
+        Input("lighted_status","value")
     ]
 )
-def make_aggregate_figure(run_by):
+def make_aggregate_figure(run_by, paved_status, lighted_status):
     graphs = [
         html.H3("Locations Per Operator",style={"margin-bottom": "10px", "margin-left": "45%", "margin-top": "10px"})
         ]
+    iteration=0
     for i in run_by:
-        df = lots[lots["Run By"] == i]
+        iteration+=1
+        df = lots[(lots["Run By"] == i) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))]
         fig = go.Figure(
             data=[
                     go.Bar(
@@ -173,11 +206,17 @@ def make_aggregate_figure(run_by):
         )
         spaces_graph = html.Div(
             [
-                dcc.Graph(id=i+" graph", figure=fig),
+                dcc.Graph(
+                    id={
+                        "type": "operator-graph",
+                        "index": iteration
+                        }, 
+                    figure=fig, 
+                    ),
             ],
             id=i+" graph container",
             className="three columns pretty_container",
-            style={'display': 'inline-block', "margin-right": "15px"}
+            style={'display': 'inline-block', "margin-right": "15px"},
         )
 
         graphs.append(spaces_graph)
@@ -188,10 +227,12 @@ def make_aggregate_figure(run_by):
     Output("map", "children"),
     [
         Input("run_by", "value"),
+        Input("paved_status", "value"),
+        Input("lighted_status","value")
     ]
 )
-def get_map(run_by):
-    df = lots[lots["Run By"].isin(run_by)]
+def get_map(run_by, paved_status, lighted_status):
+    df = lots[(lots["Run By"].isin(run_by)) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))]
     fig = px.scatter_geo(
             df,
             lat=df.Latitude,
@@ -211,6 +252,29 @@ def get_map(run_by):
     )
     return map_plot
 
+@app.callback(
+    Output("table", "children"),
+    [
+        Input("run_by", "value"),
+        Input("paved_status", "value"),
+        Input("lighted_status","value")
+    ]
+)
+def get_table(run_by, paved_status, lighted_status):
+    df = lots[(lots["Run By"].isin(run_by)) & (lots["Paved"].isin(paved_status)) & (lots["Lighted"].isin(lighted_status))].drop(columns=["Location","Latitude","Longitude"])
+    tble = html.Div(
+        [
+            dash_table.DataTable(
+                id="table-data",
+                columns=[{"name": i, "id": i} for i in df.columns],
+                data=df.to_dict('records'),
+            )
+        ],
+        id="table",
+        className="twelve columns pretty_container",
+        style={'display': 'inline-block', "margin-right": "15px", "overflow": "scroll"},
+    )
+    return tble
 # main
 if __name__ == "__main__":
     app.run_server(debug=True, host="localhost", port=8000)
