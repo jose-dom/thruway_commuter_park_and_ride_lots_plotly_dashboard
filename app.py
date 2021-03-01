@@ -115,13 +115,13 @@ app.layout = html.Div(
                     className="pretty_container three columns",
                     id="cross-filter-options",
                 ),
-                # operator plot
+                # operator plot container
                 html.Div(
                     children=[],
                     id="count-graph",
                     className="five columns"
                 ),
-                # gro pandas plot
+                # geopandas plot container
                 html.Div(
                     children=[],
                     id="map",
@@ -147,7 +147,7 @@ app.layout = html.Div(
                 html.Div(
                     children=[],
                     id="table",
-                    className="twelve columns pretty_container"
+                    className="twelve columns"
                 ),
             ],
             className="row flex-display",
@@ -288,7 +288,7 @@ def get_table(run_by, paved_status, lighted_status):
             )
         ],
         id="table",
-        className="twelve columns",
+        className="twelve columns container",
         style={'display': 'inline-block', "margin-right": "15px", "overflow": "scroll"},
     )
     return tble
