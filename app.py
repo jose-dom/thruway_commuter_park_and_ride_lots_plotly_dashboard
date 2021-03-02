@@ -326,7 +326,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
             title="Map",
             center={"lat": df.latitutide.mean(), "lon": df.longtitude.mean()},
             hover_name="lot_name",
-            hover_data=lots.columns.drop("lot_name","lot_location")
+            hover_data=df
         )
     map_plot = html.Div(
             [
