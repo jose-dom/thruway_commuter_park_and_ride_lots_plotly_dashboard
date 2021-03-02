@@ -6,7 +6,7 @@ The Commuter Park Lots Listing provides travelers along the Thruway System with 
 
 Issue → Clients are looking to gain insight into the economic activity of the particular areas where public transportation is available and have a keen interest in the corresponding real estate markets.
 
-Task → Develop an implementation plan to on-board New York Park & Ride Facilities into Bloomberg’s databases and make it available to clients through a client-facing dashboard.
+Task → Develop an implementation plan to on-board New York Park & Ride Facilities into a database and make it available to clients through a client-facing dashboard.
 
 ## Project Architecture
 
