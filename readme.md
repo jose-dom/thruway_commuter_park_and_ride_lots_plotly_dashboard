@@ -42,4 +42,6 @@ A script (update_tble.py) is implemented to extract the data from the data.gov s
 
 → Currently, our script will perform a check on the data each time a client visits the dashboard. This would be overwhelming if the application were being accessed my many users, causing many requests to the data.dov source. A solution to handle this could be to use the date of the file to run a check every 30 days.
 
+## Demo
 
+![](assets/demo_video.mp4)
