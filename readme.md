@@ -18,9 +18,9 @@ Since we are tasked with creating a client-side dashboard, we need to be able to
 
 Built using the following technologies
 
-Plotly Dash  →  Used to easily implement a web interface and the create dashboard.
+[Plotly Dash](https://dash.plot.ly/)  →  Used to easily implement a web interface and the create dashboard.
 
-Postgres  → Used relational database to storage data and feed into the client-side dashboard.
+[Postgres](https://www.postgresql.org/)  → Used relational database to storage data and feed into the client-side dashboard.
 
 ## Data Acquisition and Storage
 
