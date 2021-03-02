@@ -44,4 +44,4 @@ A script (update_tble.py) is implemented to extract the data from the data.gov s
 
 ## Demo
 
-![](assets/demo_video.mp4)
+![](assets/demo_video.gif)
