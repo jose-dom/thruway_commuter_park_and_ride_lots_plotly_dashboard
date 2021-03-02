@@ -221,6 +221,7 @@ def make_count_figure(run_by, paved_status, lighted_status, spaces_range):
     y_values = []
     for i in run_by:
         y_values.append(lots[(lots["operator"] == i) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])]["lot_name"].value_counts().sum() )
+    total = sum(y_values)
     fig = go.Figure(
             data=[
                     go.Bar(
@@ -230,7 +231,7 @@ def make_count_figure(run_by, paved_status, lighted_status, spaces_range):
                 ]
             )
     fig.update_layout(
-            title_text="Parking Lot Operators",
+            title_text="Parking Lot Operators" +  "       " + str(total) + " Lots",
             xaxis_title="Operator Name",
             yaxis_title="Number of Lots"
         )
