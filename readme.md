@@ -10,7 +10,7 @@ Task → Develop an implementation plan to on-board New York Park & Ride Facilit
 
 ## Project Architecture
 
-!["project architecture"]("assets/layout0.png")
+![]("assets/layout0.png")
 
 ## Client-Side Dashboard
 
@@ -24,13 +24,13 @@ Postgres  → Used relational database to storage data and feed into the client-
 
 ## Data Acquisition and Storage
 
-!["data acquisition"]("assets/layout1.png")
+![]("assets/layout1.png")
 
 Before data acquisition began a database was created on cloud-platform Heroku for data storage. A downloaded csv file of the data is then piped into the database as a table. It is connected with the production environment also on Heroku. The client-side plotly dash application would read from the Postgres database to grab and process the data into the visual dashboard.
 
 ## Updating our Data
 
-!["updating"]("assets/layout2.png")
+![]("assets/layout2.png")
 
 A script (update_tble.py) is implemented to extract the data from the data.gov source using an API call. The new data is downloaded and used to compare against the original data file we used to create our initial table. If any changes are detected then the database drops the outdated table and a new table is created with the new data. 
 
