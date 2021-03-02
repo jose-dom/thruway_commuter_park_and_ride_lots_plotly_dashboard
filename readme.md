@@ -1,5 +1,7 @@
 # New York Thruway Commuter Park and Ride Lots Case Study
 
+![](assets/demo_video.gif)
+
 ## Motivation
 
 The Commuter Park Lots Listing provides travelers along the Thruway System with a listing of available locations in which to park their vehicle and commute from. The Thruway Authority does offer several commuter Park and Ride lots across the system. Parking at these commuter lots is posted for a maximum stay of 16 hours, and are not designated for multiple stays. Lengthy stays defeat the purpose of Commuter Park and ride lots. Traffic personnel and State Police Police strictly enforce these parking regulations. There are no overnight or long-term parking facilities on the System.
@@ -42,6 +44,3 @@ A script (update_tble.py) is implemented to extract the data from the data.gov s
 
 → Currently, our script will perform a check on the data each time a client visits the dashboard. This would be overwhelming if the application were being accessed my many users, causing many requests to the data.dov source. A solution to handle this could be to use the date of the file to run a check every 30 days.
 
-## Demo
-
-![](assets/demo_video.gif)
