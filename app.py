@@ -334,12 +334,15 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
         ).add_to(map)
     map.save("data/map.html")
 
-    return html.Div(html.Iframe(
+    return html.Div([html.Iframe(
         id='map',
         srcDoc=open('data/map.html','r').read(),
         width='100%',
         height="300"
-    ))
+    )],
+        id="map container",
+        className="pretty_container",
+        style={"overflow": "scroll"},)
 
 # update table
 @app.callback(
