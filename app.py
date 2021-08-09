@@ -332,11 +332,11 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
         folium.Marker(
             [lat[i], long[i]], popup=f"<i>{titles[i]}</i>"
         ).add_to(map)
-    map.save("map.html")
+    map.save("data/map.html")
 
     return html.Div(html.Iframe(
         id='map',
-        srcDoc=open('map.html','r').read(),
+        srcDoc=open('data/map.html','r').read(),
         width='100%',
         height="300"
     ))
