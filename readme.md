@@ -46,4 +46,4 @@ A script (update_tble.py) is implemented to extract the data from the data.gov s
 
 ### Updates
 
-[] Update maps to use folium and leaflet
+- [ ] Update maps to use folium (leaflet)
