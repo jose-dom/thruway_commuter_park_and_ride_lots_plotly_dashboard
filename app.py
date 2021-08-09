@@ -17,6 +17,7 @@ import dash_table
 import psycopg2
 from psycopg2 import Error
 import os
+import folium
 # update script to check whether data is new
 import update_tble
 # connecting to database and getting lots data
@@ -318,24 +319,22 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
 )
 def get_map(run_by, paved_status, lighted_status, spaces_range):
     df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])]
-    fig = px.scatter_geo(
-            df,
-            lat=df.latitutide,
-            lon=df.longtitude,
-            scope="usa",
-            title="Map",
-            center={"lat": df.latitutide.mean(), "lon": df.longtitude.mean()},
-            hover_name="lot_name",
-            hover_data=df
-        )
-    map_plot = html.Div(
-            [
-                dcc.Graph(id="map-plot", figure=fig),
-            ],
-            id="map container",
-            className="pretty_container",
+    
+    titles = df[df.columns[0]]
+    lat =  df[df.columns[7]]
+    long =  df[df.columns[8]]
+    avg_lat = sum(lat)/len(lat)
+    avg_long = sum(long)/len(long)
+    print(len(df))
+    map = folium.Map(location=[avg_lat, avg_long], zoom_start=6)
+    map.save("map.html")
+
+    return html.Iframe(
+        id='map',
+        srcDoc=open('map.html','r').read(),
+        width='100%',
+        height="150"
     )
-    return map_plot
 
 # update table
 @app.callback(
