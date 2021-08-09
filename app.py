@@ -338,7 +338,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
         id='map',
         srcDoc=open('map.html','r').read(),
         width='100%',
-        height="150"
+        height="300"
     ))
 
 # update table
