@@ -13,11 +13,11 @@ click==7.1.2
 click-plugins==1.1.1
 cligj==0.7.1
 cycler==0.10.0
-dash==1.19.0
-dash-core-components==1.15.0
-dash-html-components==1.1.2
+dash==1.21.0
+dash-core-components==1.17.1
+dash-html-components==1.1.4
 dash-renderer==1.9.0
-dash-table==4.11.2
+dash-table==4.12.0
 decorator==4.4.2
 defusedxml==0.6.0
 entrypoints==0.3
@@ -98,7 +98,7 @@ testpath==0.4.4
 threadpoolctl==2.1.0
 tornado==6.1
 traitlets==4.3.3
-urllib3==1.26.4
+urllib3==1.26.6
 wcwidth==0.2.5
 webencodings==0.5.1
 Werkzeug==1.0.1
