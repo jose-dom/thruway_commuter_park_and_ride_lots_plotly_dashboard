@@ -327,14 +327,19 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     avg_long = sum(long)/len(long)
     print(len(df))
     map = folium.Map(location=[avg_lat, avg_long], zoom_start=6)
+    # adding markers
+    for i in range(0,len(df)):
+        folium.Marker(
+            [lat[i], long[i]], popup=f"<i>{titles[i]}</i>"
+        ).add_to(map)
     map.save("map.html")
 
-    return html.Iframe(
+    return html.Div(html.Iframe(
         id='map',
         srcDoc=open('map.html','r').read(),
         width='100%',
         height="150"
-    )
+    ))
 
 # update table
 @app.callback(
