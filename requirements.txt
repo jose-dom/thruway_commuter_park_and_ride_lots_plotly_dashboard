@@ -15,17 +15,23 @@ cligj==0.7.1
 cycler==0.10.0
 dash==1.21.0
 dash-core-components==1.17.1
+dash-extensions==0.0.60
 dash-html-components==1.1.4
+dash-leaflet==0.1.16
 dash-renderer==1.9.0
 dash-table==4.12.0
 decorator==4.4.2
 defusedxml==0.6.0
+EditorConfig==0.12.3
 entrypoints==0.3
 Fiona==1.8.18
 Flask==1.1.2
+Flask-Caching==1.10.1
 Flask-Compress==1.9.0
 folium==0.12.1
 future==0.18.2
+GDAL==3.2.1
+geobuf==1.1.1
 geopandas==0.8.2
 gunicorn==20.0.4
 idna==2.10
@@ -37,6 +43,7 @@ itsdangerous==1.1.0
 jedi==0.18.0
 Jinja2==2.11.3
 joblib==1.0.1
+jsbeautifier==1.14.0
 jsonschema==3.2.0
 jupyter==1.0.0
 jupyter-client==6.1.11
@@ -49,6 +56,7 @@ MarkupSafe==1.1.1
 matplotlib==3.3.4
 mistune==0.8.4
 mlxtend==0.18.0
+more-itertools==8.8.0
 mpmath==1.2.1
 munch==2.5.0
 nbclient==0.5.2
@@ -68,6 +76,7 @@ Pillow==8.1.0
 plotly==4.14.3
 prometheus-client==0.9.0
 prompt-toolkit==3.0.16
+protobuf==3.17.3
 psutil==5.8.0
 psycopg2==2.9.1
 ptyprocess==0.7.0

@@ -17,7 +17,12 @@ import dash_table
 import psycopg2
 from psycopg2 import Error
 import os
-import folium
+import dash_html_components as html
+import dash_leaflet as dl
+import dash_leaflet.express as dlx
+from dash import Dash
+from dash.dependencies import Output, Input
+from dash_extensions.javascript import arrow_function
 # update script to check whether data is new
 import update_tble
 # connecting to database and getting lots data
@@ -326,20 +331,19 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     avg_lat = sum(lat)/len(lat)
     avg_long = sum(long)/len(long)
     print(len(df))
-    map = folium.Map(location=[avg_lat, avg_long], zoom_start=6)
+                
     # adding markers
+    points = []
     for i in range(0,len(df)):
-        folium.Marker(
-            [lat[i], long[i]], popup=f"<i>{titles[i]}</i>"
-        ).add_to(map)
-    map.save("data/map.html")
+        points.append(dlx.geojson_to_geobuf(dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])))
 
-    return html.Div([html.Iframe(
-        id='map',
-        srcDoc=open('data/map.html','r').read(),
-        width='100%',
-        height="300"
-    )],
+    map = dl.Map(center=[lat, long], zoom=7, children=[
+                    dl.TileLayer(),
+                    dl.GeoJSON(data=points, format="geobuf"),  # in-memory geobuf (smaller payload than geojson)f resource (fastest option)
+                ], 
+                style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, id="map"),
+
+    return html.Div([map],
         id="map container",
         className="pretty_container",
         style={"overflow": "scroll"},)
