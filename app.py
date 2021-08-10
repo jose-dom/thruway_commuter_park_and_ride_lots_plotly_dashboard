@@ -332,19 +332,19 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     avg_long = sum(long)/len(long)
     print(len(df))
 
-    map = dl.Map(center=[lat, long], zoom=7, children=[
+    map = dl.Map(center=[lat, long], 
+                zoom=7, 
+                children=[
                     dl.TileLayer(),
-                    
                 ], 
-                style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, id="map"),
+                style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
+                id="map")
                 
     # adding markers
-    points = []
     for i in range(0,len(df)):
-        points.append(dlx.geojson_to_geobuf(dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])))
-        map.add(dl.GeoJSON(data=points[i], format="geobuf"))  # in-memory geobuf (smaller payload than geojson)f resource (fastest option)
-
-    return html.Div([map],
+        map + dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])) # in-memory geobuf (smaller payload than geojson)f resource (fastest option)
+    
+    return html.Div(map,
         id="map container",
         className="pretty_container",
         style={"overflow": "scroll"},)
