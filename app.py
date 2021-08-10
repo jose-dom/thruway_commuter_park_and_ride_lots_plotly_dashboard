@@ -337,7 +337,6 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
                 children=[
                     dl.TileLayer(),
                 ], 
-                style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
                 id="map object")
                 
     # adding markers
