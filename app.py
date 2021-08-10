@@ -338,7 +338,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
                     dl.TileLayer(),
                 ], 
                 style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
-                id="map")
+                id="map object")
                 
     # adding markers
     for i in range(0,len(df)):
