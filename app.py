@@ -336,12 +336,13 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
                 zoom=7, 
                 children=[
                     dl.TileLayer(),
+                    dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[0], lon=long[0])]))
                 ], 
                 id="map object")
                 
     # adding markers
-    for i in range(0,len(df)):
-        map + dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])) # in-memory geobuf (smaller payload than geojson)f resource (fastest option)
+    #for i in range(0,len(df)):
+       #map + dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])) # in-memory geobuf (smaller payload than geojson)f resource (fastest option)
     
     return html.Div(map,
         id="map container",
