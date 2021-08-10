@@ -338,6 +338,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
                     dl.TileLayer(),
                     dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[0], lon=long[0])]))
                 ], 
+                style={'width': '100%', 'height': '300px', 'margin': "auto", "display": "block"}, 
                 id="map object")
                 
     # adding markers
