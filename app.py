@@ -170,7 +170,14 @@ app.layout = html.Div(
                 # geopandas plot container
                 html.Div(
                     children=[
-                        
+                        dl.Map(center=[], 
+                            zoom=7, 
+                            children=[
+                               
+                            ], 
+                            style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
+                            id="map-object"
+                        )
                     ],
                     id="map",
                     style={"overflow": "scroll", "height": "50vh"},
@@ -321,6 +328,7 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
 # update map plot
 @app.callback(
     Output("map", "children"),
+    Output("map", "center"),
     [
         Input("run_by", "value"),
         Input("paved_status", "value"),
@@ -345,17 +353,10 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     else:
         print("Not equal")
     
-                            
+    geo_points  = [ dl.TileLayer(), dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf") ]    
+    center =[avg_lat, avg_long]     
 
-    return dl.Map(center=[avg_lat, avg_long], 
-                            zoom=7, 
-                            children=[
-                                dl.TileLayer(),
-                                dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf")
-                            ], 
-                            style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
-                            id="map-object"
-                        )
+    return geo_points, center
       
 
 # update table
