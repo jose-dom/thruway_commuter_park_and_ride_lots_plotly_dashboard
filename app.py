@@ -64,6 +64,12 @@ lighted_status_options = [
     {"label": str(option), "value": str(option)}
     for option in lots["light"].unique()
 ]
+
+lat =  lots[lots.columns[7]]
+long =  lots[lots.columns[8]]
+avg_lat = sum(lat)/len(lat)
+avg_long = sum(long)/len(long)
+
 # app layout
 app.layout = html.Div(
     [
@@ -168,12 +174,12 @@ app.layout = html.Div(
                 html.Div(
                     children=[
                         html.Div(
-        dl.Map(center=[0, 0], 
+        dl.Map(center=[avg_lat, avg_long], 
                 zoom=7, 
                 children=[
                     dl.TileLayer(),
                     dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}}),
-                    dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=0, lon=0)]))
+                    
                 ], 
                 style={'width': '100%', 'height': '100vh', 'margin': "auto", "display": "block"}, 
                 id="map-object"),
@@ -349,8 +355,6 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     if len(lat) == len(long):
         for i in range(len(lat)):
             temp.append(dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])))
-
-
 
     return temp
 
