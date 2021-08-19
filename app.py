@@ -347,20 +347,15 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     
                             
 
-    return html.Div(
-                            children=[
-                                dl.Map(center=[avg_lat, avg_long], 
+    return dl.Map(center=[avg_lat, avg_long], 
                                     zoom=7, 
                                     children=[
                                         dl.TileLayer(),
                                         dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf", id="points")
                                     ], 
-                                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
+                                    className="pretty_container",
+                                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block","overflow": "scroll"}, 
                                     id="map-object")
-                            ],
-                            id="map-container",
-                            className="pretty_container",
-                            style={"overflow": "scroll"},)
 
 
 # update table
