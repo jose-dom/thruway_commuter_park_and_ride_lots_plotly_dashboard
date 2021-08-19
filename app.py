@@ -166,7 +166,21 @@ app.layout = html.Div(
                 ),
                 # geopandas plot container
                 html.Div(
-                    children=[],
+                    children=[
+                        html.Div(
+        dl.Map(center=[0, 0], 
+                zoom=7, 
+                children=[
+                    dl.TileLayer(),
+                    dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}}),
+                    dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=0, lon=0)]))
+                ], 
+                style={'width': '100%', 'height': '100vh', 'margin': "auto", "display": "block"}, 
+                id="map-object"),
+        id="map container",
+        className="pretty_container",
+        style={"overflow": "scroll"},)
+                    ],
                     id="map",
                     className="four columns"
                 )
@@ -314,7 +328,7 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
 
 # update map plot
 @app.callback(
-    Output("map", "children"),
+    Output("map-object", "children"),
     [
         Input("run_by", "value"),
         Input("paved_status", "value"),
@@ -331,24 +345,14 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     avg_lat = sum(lat)/len(lat)
     avg_long = sum(long)/len(long)
     print(len(df))
+    temp = []
+    if len(lat) == len(long):
+        for i in range(len(lat)):
+            temp.append(dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])))
 
-    map = dl.Map(center=[lat, long], 
-                zoom=7, 
-                children=[
-                    dl.TileLayer(),
-                    dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[0], lon=long[0])]))
-                ], 
-                style={'width': '100%', 'height': '300px', 'margin': "auto", "display": "block"}, 
-                id="map object")
-                
-    # adding markers
-    #for i in range(0,len(df)):
-       #map + dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])) # in-memory geobuf (smaller payload than geojson)f resource (fastest option)
-    
-    return html.Div(map,
-        id="map container",
-        className="pretty_container",
-        style={"overflow": "scroll"},)
+
+
+    return temp
 
 # update table
 @app.callback(
@@ -375,6 +379,7 @@ def get_table(run_by, paved_status, lighted_status, spaces_range):
         style={"overflow": "scroll"},
     )
     return tble
+
 # main
 if __name__ == "__main__":
     app.run_server(debug=True)
