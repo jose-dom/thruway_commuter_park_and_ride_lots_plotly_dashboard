@@ -173,17 +173,17 @@ app.layout = html.Div(
                 # geopandas plot container
                 html.Div(
                     children=[
-                        html.Div(
+                        
                             dl.Map(center=[avg_lat, avg_long], 
                                     zoom=7, 
                                     children=[
                                         dl.TileLayer(),
-                                        dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}}),
                                         
                                     ], 
                                     style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
                                     id="map-object"),
-                            id="map container",
+                            html.Div(
+                            id="map-container",
                             className="pretty_container",
                             style={"overflow": "scroll"},)
                     ],
@@ -353,12 +353,16 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     print(len(df))
 
     points = []
-    dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[0], lon=long[0])]))
     if len(lat) == len(long):
         for i in range(len(lat)):
             points.append(dict(lat=lat[i], lon=long[i]))
 
-    return dl.GeoJSON(data=dlx.dicts_to_geojson(points))
+    return dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf", id="points")
+
+@app.callback(Output("map-container", "children"), [Input("points", "hover_feature")])
+def state_hover(feature):
+    if feature is not None:
+        return print(feature)
 
 # update table
 @app.callback(
