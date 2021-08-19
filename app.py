@@ -173,19 +173,7 @@ app.layout = html.Div(
                 # geopandas plot container
                 html.Div(
                     children=[
-                        
-                            dl.Map(center=[avg_lat, avg_long], 
-                                    zoom=7, 
-                                    children=[
-                                        dl.TileLayer(),
-                                        
-                                    ], 
-                                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
-                                    id="map-object"),
-                            html.Div(
-                            id="map-container",
-                            className="pretty_container",
-                            style={"overflow": "scroll"},)
+
                     ],
                     id="map",
                     className="four columns"
@@ -334,7 +322,7 @@ def make_aggregate_figure(run_by, paved_status, lighted_status, spaces_range):
 
 # update map plot
 @app.callback(
-    Output("map-object", "children"),
+    Output("map", "children"),
     [
         Input("run_by", "value"),
         Input("paved_status", "value"),
@@ -356,13 +344,24 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     if len(lat) == len(long):
         for i in range(len(lat)):
             points.append(dict(lat=lat[i], lon=long[i]))
+    
+                            
 
-    return dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf", id="points")
+    return html.Div(
+                            children=[
+                                dl.Map(center=[avg_lat, avg_long], 
+                                    zoom=7, 
+                                    children=[
+                                        dl.TileLayer(),
+                                        dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf", id="points")
+                                    ], 
+                                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
+                                    id="map-object")
+                            ],
+                            id="map-container",
+                            className="pretty_container",
+                            style={"overflow": "scroll"},)
 
-@app.callback(Output("map-container", "children"), [Input("points", "hover_feature")])
-def state_hover(feature):
-    if feature is not None:
-        return print(feature)
 
 # update table
 @app.callback(
