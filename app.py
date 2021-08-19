@@ -354,9 +354,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     temp = []
     if len(lat) == len(long):
         for i in range(len(lat)):
-            temp.append(dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])))
-
-    return temp.values()
+            return dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])]))
 
 # update table
 @app.callback(
