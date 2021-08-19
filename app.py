@@ -173,7 +173,7 @@ app.layout = html.Div(
 
                     ],
                     id="map",
-                    style={"overflow": "scroll"},
+                    style={"overflow": "scroll", "height": "50vh"},
                     className="four columns pretty_container"
                 )
             ],
@@ -342,6 +342,8 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     if len(lat) == len(long):
         for i in range(len(lat)):
             points.append(dict(lat=lat[i], lon=long[i]))
+    else:
+        print("Not equal")
     
                             
 
