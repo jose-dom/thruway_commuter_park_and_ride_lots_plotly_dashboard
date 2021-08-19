@@ -342,14 +342,12 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     for i in range(0,len(lat)-1):
         points.append(dict(lat=lat[i], lon=long[i]))
     
-    geo_points  = dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf")  
-
     return dl.Map(
                             center=[avg_lat, avg_long],
                             zoom=7, 
                             children=[
                                dl.TileLayer(),
-                               geo_points
+                               dl.GeoJSON(data=dlx.dicts_to_geojson(points))  
                             ], 
                             style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
                             id="map-object"
