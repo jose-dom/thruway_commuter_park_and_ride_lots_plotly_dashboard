@@ -173,7 +173,8 @@ app.layout = html.Div(
 
                     ],
                     id="map",
-                    className="four columns"
+                    style={"overflow": "scroll"},
+                    className="four columns pretty_container"
                 )
             ],
             className="row flex-display",
@@ -350,8 +351,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
                         dl.TileLayer(),
                         dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf", id="points")
                     ], 
-                    className="pretty_container",
-                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block","overflow": "scroll"}, 
+                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
                     id="map-object"
                 )
 
