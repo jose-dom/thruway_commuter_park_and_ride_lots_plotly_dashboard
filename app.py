@@ -9,7 +9,6 @@ import datetime as dt
 import pandas as pd
 from dash.dependencies import Input, Output, State, ClientsideFunction, MATCH
 import dash_core_components as dcc
-import dash_html_components as html
 import plotly.graph_objs as go
 import plotly.express as px
 import geopandas as gpd
@@ -20,8 +19,6 @@ import os
 import dash_html_components as html
 import dash_leaflet as dl
 import dash_leaflet.express as dlx
-from dash import Dash
-from dash.dependencies import Output, Input
 from dash_extensions.javascript import arrow_function
 # update script to check whether data is new
 import update_tble
@@ -348,14 +345,15 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
                             
 
     return dl.Map(center=[avg_lat, avg_long], 
-                                    zoom=7, 
-                                    children=[
-                                        dl.TileLayer(),
-                                        dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf", id="points")
-                                    ], 
-                                    className="pretty_container",
-                                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block","overflow": "scroll"}, 
-                                    id="map-object")
+                    zoom=7, 
+                    children=[
+                        dl.TileLayer(),
+                        dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf", id="points")
+                    ], 
+                    className="pretty_container",
+                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block","overflow": "scroll"}, 
+                    id="map-object"
+                )
 
 
 # update table
