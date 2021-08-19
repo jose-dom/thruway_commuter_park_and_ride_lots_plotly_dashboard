@@ -351,10 +351,14 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     avg_lat = sum(lat)/len(lat)
     avg_long = sum(long)/len(long)
     print(len(df))
-    temp = []
+
+    points = []
+    dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[0], lon=long[0])]))
     if len(lat) == len(long):
         for i in range(len(lat)):
-            return dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])]))
+            points.append(dict(lat=lat[i], lon=long[i]))
+
+    return dl.GeoJSON(data=dlx.dicts_to_geojson(points))
 
 # update table
 @app.callback(
