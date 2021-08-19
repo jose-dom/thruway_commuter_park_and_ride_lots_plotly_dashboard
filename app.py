@@ -170,15 +170,7 @@ app.layout = html.Div(
                 # geopandas plot container
                 html.Div(
                     children=[
-                        dl.Map(
-                            center=[avg_lat, avg_long],
-                            zoom=7, 
-                            children=[
-                               dl.TileLayer(),
-                            ], 
-                            style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
-                            id="map-object"
-                        )
+                        
                     ],
                     id="map",
                     style={"overflow": "scroll", "height": "55vh"},
@@ -355,29 +347,17 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     
     geo_points  = dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf")  
 
-    return geo_points
+    return dl.Map(
+                            center=[avg_lat, avg_long],
+                            zoom=7, 
+                            children=[
+                               dl.TileLayer(),
+                               geo_points
+                            ], 
+                            style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
+                            id="map-object"
+                        )
 
-# update map plot
-@app.callback(
-    Output("map", "center"),
-    [
-        Input("run_by", "value"),
-        Input("paved_status", "value"),
-        Input("lighted_status","value"),
-        Input("avail_spaces_slider", "value"),
-    ]
-)
-def get_map(run_by, paved_status, lighted_status, spaces_range):
-    df = lots[(lots["operator"].isin(run_by)) & (lots["is_paved"].isin(paved_status)) & (lots["light"].isin(lighted_status)) & (lots["available_spaces"] >= spaces_range[0]) & (lots["available_spaces"] <= spaces_range[1])]
-    
-    titles = df[df.columns[0]]
-    lat =  df[df.columns[7]]
-    long =  df[df.columns[8]]
-    avg_lat = sum(lat)/len(lat)
-    avg_long = sum(long)/len(long)
-    print(len(df))
-
-    return avg_lat,    avg_long 
 
 # update table
 @app.callback(
