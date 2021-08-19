@@ -339,11 +339,8 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
     print(len(df))
 
     points = []
-    if len(lat) == len(long):
-        for i in range(len(lat)):
-            points.append(dict(lat=lat[i], lon=long[i]))
-    else:
-        print("Not equal")
+    for i in range(0,len(lat)):
+        points.append(dict(lat=lat[i], lon=long[i]))
     
     geo_points  = dl.GeoJSON(data=dlx.dicts_to_geojson(points), format="geobuf")  
 
