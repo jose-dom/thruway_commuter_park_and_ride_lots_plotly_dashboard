@@ -174,18 +174,18 @@ app.layout = html.Div(
                 html.Div(
                     children=[
                         html.Div(
-        dl.Map(center=[avg_lat, avg_long], 
-                zoom=7, 
-                children=[
-                    dl.TileLayer(),
-                    dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}}),
-                    
-                ], 
-                style={'width': '100%', 'height': '100vh', 'margin': "auto", "display": "block"}, 
-                id="map-object"),
-        id="map container",
-        className="pretty_container",
-        style={"overflow": "scroll"},)
+                            dl.Map(center=[avg_lat, avg_long], 
+                                    zoom=7, 
+                                    children=[
+                                        dl.TileLayer(),
+                                        dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}}),
+                                        
+                                    ], 
+                                    style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, 
+                                    id="map-object"),
+                            id="map container",
+                            className="pretty_container",
+                            style={"overflow": "scroll"},)
                     ],
                     id="map",
                     className="four columns"
@@ -356,7 +356,7 @@ def get_map(run_by, paved_status, lighted_status, spaces_range):
         for i in range(len(lat)):
             temp.append(dl.GeoJSON(data=dlx.dicts_to_geojson([dict(lat=lat[i], lon=long[i])])))
 
-    return temp
+    return temp.values()
 
 # update table
 @app.callback(
